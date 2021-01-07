@@ -100,14 +100,14 @@
 
 .cardItems {
   margin: 0px;
-  padding-left: 20px;
+  padding-left: 0px;
 }
 
 .cardItem {
   text-align: left;
   font-size: 14px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   margin-bottom: 10px;
 }
@@ -116,7 +116,7 @@
   opacity: 1;
 }
 
-.cardItem::before {
+/* .cardItem::before {
   content: "";
   display: block;
   height: 5px;
@@ -126,7 +126,7 @@
   position: absolute;
   left: -10px;
   top: 10px;
-}
+} */
 
 .card:not(:last-child) {
   margin-bottom: 16px;
@@ -165,4 +165,37 @@
   opacity: 0;
   transition: opacity 0.5s;
   cursor: pointer;
+}
+
+.cardItemInner {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cardItemInner > div {
+  position: relative;
+}
+
+[data-crossout="true"] .cardItemInner > div::before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  display: block;
+  background: black;
+  top: 10px;
+  left: 0;
+  position: absolute;
+}
+
+[data-crossout="true"] .cardItemInner::before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  display: block;
+  background: black;
+  top: 10px;
+  left: 0;
+  position: absolute;
 }

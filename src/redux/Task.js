@@ -14,6 +14,9 @@ import {
   getSubTaskIndex,
   removeTask,
   removeSubTask,
+  editCheckbox,
+  loadState,
+  setLocalStorage,
 } from "./taskSlice";
 import styles from "./Task.module.css";
 
@@ -21,11 +24,12 @@ export function Task() {
   const task = useSelector(selectTask);
   const target = useSelector(selectTarget);
   const title = useSelector(selectTitle);
+  const ls = useSelector(loadState);
   const dispatch = useDispatch();
-  const [taskTitle, setTaskTitle] = useState("title");
-  console.log(task);
-  console.log(target);
-  console.log(title);
+  const [taskTitle, setTaskTitle] = useState("Task");
+  // console.log(task);
+  // console.log(target);
+  // console.log(ls);
   const text = useRef("");
 
   const handleChange = (evt) => {
@@ -33,11 +37,12 @@ export function Task() {
   };
 
   const handleBlur = (e) => {
-    console.log(e.target.parentNode);
+    // console.log(e.target.parentNode);
     dispatch(
       getTaskIndex(e.target.parentNode.parentNode.getAttribute("data-card"))
     );
     dispatch(editTask(e.target.innerHTML));
+    // dispatch(setLocalStorage());
   };
 
   const handleBlurItem = (e) => {
@@ -50,6 +55,7 @@ export function Task() {
       getSubTaskIndex(e.target.parentNode.getAttribute("data-carditem"))
     );
     dispatch(editSubTask(e.target.innerHTML));
+    console.log(e.target);
   };
 
   const handleRemoveCard = (e) => {
@@ -69,7 +75,22 @@ export function Task() {
     dispatch(removeSubTask());
   };
 
-  const renderTask = task.map((taskItem, i) => (
+  const handleCheck = (e) => {
+    dispatch(
+      getTaskIndex(
+        e.target.parentNode.parentNode.parentNode.getAttribute("data-card")
+      )
+    );
+    dispatch(
+      getSubTaskIndex(e.target.parentNode.getAttribute("data-carditem"))
+    );
+
+    dispatch(editCheckbox(e.target.checked));
+  };
+
+  const storedTask = JSON.parse(localStorage.getItem("task"));
+
+  const renderTask = storedTask.map((taskItem, i) => (
     <div key={i} className={styles.card} data-card={i}>
       <div className={styles.cardHeader}>
         <ContentEditable
@@ -89,11 +110,22 @@ export function Task() {
       </div>
       <ul className={styles.cardItems}>
         {taskItem.subtask.map((item, i2) => (
-          <li className={styles.cardItem} key={i2} data-carditem={i2}>
+          <li
+            className={styles.cardItem}
+            key={i2}
+            data-carditem={i2}
+            data-crossout={item.status}
+          >
+            <input
+              type="checkbox"
+              {...(item.status ? { checked: true } : "")}
+              onChange={handleCheck}
+            />
             <ContentEditable
-              html={item}
+              html={item.subtaskitem}
               onBlur={handleBlurItem}
               onChange={handleChange}
+              className={styles.cardItemInner}
             />
             <button
               className={styles.cardRemoveSubTask}
