@@ -15,7 +15,7 @@ import {
   removeTask,
   removeSubTask,
   editCheckbox,
-  loadState,
+  // loadState,
   setLocalStorage,
 } from "./taskSlice";
 import styles from "./Task.module.css";
@@ -24,7 +24,7 @@ export function Task() {
   const task = useSelector(selectTask);
   const target = useSelector(selectTarget);
   const title = useSelector(selectTitle);
-  const ls = useSelector(loadState);
+  // const ls = useSelector(loadState);
   const dispatch = useDispatch();
   const [taskTitle, setTaskTitle] = useState("Task");
   // console.log(task);
@@ -88,9 +88,12 @@ export function Task() {
     dispatch(editCheckbox(e.target.checked));
   };
 
-  const storedTask = JSON.parse(localStorage.getItem("task"));
+  const handleProgress = (e) => {
+    console.log(e);
+  };
+  // const storedTask = JSON.parse(localStorage.getItem("task"));
 
-  const renderTask = storedTask.map((taskItem, i) => (
+  const renderTask = task.map((taskItem, i) => (
     <div key={i} className={styles.card} data-card={i}>
       <div className={styles.cardHeader}>
         <ContentEditable
@@ -141,6 +144,7 @@ export function Task() {
       </button>
     </div>
   ));
+
   return (
     <div className={styles.container}>
       <div className={styles.row}>
